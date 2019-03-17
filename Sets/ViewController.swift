@@ -17,7 +17,17 @@ class ViewController: UIViewController {
     
     @IBOutlet var buttons: [UIButton]!
     
-
+    @IBAction func touchHint(_ sender: UIButton) {
+        if let c = game.getAValidSet() {
+            let cards = Set(c)
+            for k in buttonToCard {
+                if cards.contains(k.value) {
+                    k.key.layer.borderColor = UIColor.darkGray.cgColor
+                }
+            }
+        }
+    }
+    
     
     @IBAction func touchReset(_ sender: UIButton) {
         game.reset()
@@ -59,6 +69,9 @@ class ViewController: UIViewController {
                 paintButton(button: buttonIn, card: cardIn)
             }
         }
+        
+        // Paint Statistics
+        matchedCount.text = "Matches = \(game.matchedSetsCount)"
     }
     
     func paintButton(button: UIButton, card : Card)
@@ -70,7 +83,7 @@ class ViewController: UIViewController {
         button.layer.borderColor = UIColor.blue.cgColor
         switch card.state {
         case .Selected:
-            button.layer.borderColor = UIColor.green.cgColor
+            button.layer.borderColor = UIColor.yellow.cgColor
         case .Active:
             button.layer.borderColor = UIColor.blue.cgColor
         default:

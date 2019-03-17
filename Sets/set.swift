@@ -11,8 +11,8 @@ import Foundation
 class Sets {
     private let d_initialVisbleCardCount : Int
     private let d_maxVisbleCardCount: Int
-    private(set) var cards : Dictionary<Int,Card> = Dictionary<Int,Card>();
-    private(set) var d_matchedSetsCount: Int = 0
+    private(set) var cards = Dictionary<Int,Card>()
+    private(set) var matchedSetsCount: Int = 0
     var selectedCards : Array<Card> {
         get {
             return Array(cards.filter({$0.value.state == .Selected}).values)
@@ -50,7 +50,7 @@ class Sets {
         {
             card.state = .Hidden
         }
-        d_matchedSetsCount = 0
+        matchedSetsCount = 0
     }
     
     func chooseCard(id:Int)
@@ -73,6 +73,7 @@ class Sets {
             for c in selectedCards {
                 c.state = .Matched
             }
+            self.matchedSetsCount+=1
         }
         else {
             for c in selectedCards {
@@ -88,14 +89,14 @@ class Sets {
         let shadingSeen = Set<Shading>(cardsIn.map{$0.shading});
         let colorSeen = Set<Color>(cardsIn.map{$0.color});
         let countSeen = Set<Count>(cardsIn.map{$0.count});
-        return shapeSeen.countIsOneOrThree() && shadingSeen.countIsOneOrThree() && colorSeen.countIsOneOrThree() && countSeen.countIsOneOrThree()
+        return (shapeSeen.countIsOneOrThree() && shadingSeen.countIsOneOrThree() && colorSeen.countIsOneOrThree() && countSeen.countIsOneOrThree())
     }
     func getAValidSet() -> Array<Card>?
     {
         let visible = self.visbleCards
         for i in 0..<visible.count {
-            for j in i..<visible.count {
-                for k in i..<visible.count {
+            for j in (i+1)..<visible.count {
+                for k in (j+1)..<visible.count {
                     let cards = [visible[i], visible[j], visible[k]]
                     if isValidSet(cardsIn: cards) {
                         return cards
@@ -125,6 +126,6 @@ class Sets {
 extension Set {
     func countIsOneOrThree() -> Bool
     {
-        return self.count == 1 || self.count == 3
+        return (self.count == 1 || self.count == 3)
     }
 }
